@@ -14,7 +14,7 @@ from src.utils.zero_copy_from_numpy import *
 from src.utils.io import create_dir
 
 
-dataset = 'dips'
+dataset = 'anbase'
 method_name = 'equidock'
 remove_clashes = False  # Set to true if you want to remove (most of the) steric clashes. Will increase run time.
 if remove_clashes:
@@ -92,6 +92,9 @@ def main(args):
     elif dataset == 'db5':
         checkpoint_filename = 'oct20_Wdec_0.001#ITS_lw_10.0#Hdim_64#Nlay_5#shrdLay_T#ln_LN#lnX_0#Hnrm_0#NattH_50#skH_0.5#xConnI_0.0#LkySl_0.01#pokOTw_1.0#fine_F#'
         checkpoint_filename = 'checkpts/' + checkpoint_filename + '/db5_model_best.pth'
+    else:
+        checkpoint_filename = 'oct20_Wdec_0.001#ITS_lw_10.0#Hdim_64#Nlay_5#shrdLay_T#ln_LN#lnX_0#Hnrm_0#NattH_50#skH_0.5#xConnI_0.0#LkySl_0.01#pokOTw_1.0#fine_F#'
+        checkpoint_filename = 'checkpts/' + checkpoint_filename + '/db5_model_best.pth'
 
     print('checkpoint_filename = ', checkpoint_filename)
 
@@ -121,11 +124,7 @@ def main(args):
     input_dir = './test_sets_pdb/' + dataset + '_test_random_transformed/random_transformed/'
     ground_truth_dir = './test_sets_pdb/' + dataset + '_test_random_transformed/complexes/'
     output_dir = './test_sets_pdb/' + dataset + '_' + method_name + '_results/'
-
-    input_dir = './test_sets_pdb/jean/'
-    ground_truth_dir = './test_sets_pdb/jean/'
-    output_dir = './test_sets_pdb/jean_out/'
-    # create_dir(output_dir)
+    os.makedirs(output_dir, exist_ok=True)
 
     pdb_files = [f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f)) and f.endswith('.pdb')]
     for file in pdb_files:

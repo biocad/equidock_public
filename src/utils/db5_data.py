@@ -90,8 +90,8 @@ class Unbound_Bound_Data(Dataset):
                 input_residues_lists = [(bound_ligand_residues_list[i], bound_receptor_residues_list[i])
                                         for i in range(len(bound_ligand_residues_list))]
 
-            else:
-                assert args['data'] == 'dips'
+
+            elif args['data'] == 'dips':
                 if reload_mode != 'train':
                     data_fraction = 1.
 
@@ -105,6 +105,25 @@ class Unbound_Bound_Data(Dataset):
 
                 print('Num of pairs in ', reload_mode, ' = ', len(dill_filenames_list))
                 input_residues_lists = [get_residues_DIPS(os.path.join(raw_data_path, f)) for f in dill_filenames_list]
+
+            else:
+                assert data_fraction == 1.
+                onlyfiles = [f for f in os.listdir(raw_data_path) if os.path.isfile(os.path.join(raw_data_path, f))]
+                code_set = set([file.split('_')[0] for file in onlyfiles])
+                split_code_set = set()
+                with open(os.path.join(split_files_path, reload_mode + '.txt'), 'r') as f:
+                    for line in f.readlines():
+                        split_code_set.add(line.rstrip())
+                code_set = code_set & split_code_set
+                code_list = list(code_set)
+
+                bound_ligand_residues_list = [get_residues_db5(os.path.join(raw_data_path, code + '_l_b.pdb'))
+                                              for code in code_list]
+                bound_receptor_residues_list = [get_residues_db5(os.path.join(raw_data_path, code + '_r_b.pdb'))
+                                                for code in code_list]
+
+                input_residues_lists = [(bound_ligand_residues_list[i], bound_receptor_residues_list[i])
+                                        for i in range(len(bound_ligand_residues_list))]
 
 
             print('Start preprocess_unbound_bound')
@@ -155,13 +174,24 @@ class Unbound_Bound_Data(Dataset):
             print('Done protein_to_graph_unbound_bound')
 
             ligand_graph_list, receptor_graph_list = [], []
-            for result in both_proteins_to_graph_pair_list:
+            bad_codes = []
+            for result, code in zip(both_proteins_to_graph_pair_list, code_list):
                 ligand_graph, receptor_graph = result
-                ligand_graph_list.append(ligand_graph)
-                receptor_graph_list.append(receptor_graph)
+                if not (ligand_graph is None or receptor_graph is None):
+                    try:
+                        ligand_graph_list.append(ligand_graph)
+                        receptor_graph_list.append(receptor_graph)
+                    except Exception as err:
+                        print('Error while saving graph for code', code)
+                else:
+                    print('Error: no graph for code', code)
+                    bad_codes.append(code)
 
             save_graphs(ligand_graph_filename, ligand_graph_list)
             save_graphs(receptor_graph_filename, receptor_graph_list)
+
+            with open(os.path.join(args['cache_path'], 'bad_pdbs.pkl'), 'wb') as outfile:
+                pickle.dump(bad_codes, outfile, pickle.HIGHEST_PROTOCOL)
 
 
 

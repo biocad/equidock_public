@@ -22,7 +22,8 @@ parser.add_argument('-random_seed', type=int, required=False, default=8, help='r
 
 
 # Data
-parser.add_argument('-data', type=str, required=False, default='db5', choices=['db5', 'dips'])
+parser.add_argument('-data', type=str, required=False, default='db5'#, choices=['db5', 'dips']
+                    )
 parser.add_argument('-data_fraction', type=float, default=1., required=False)
 parser.add_argument('-split', type=int, required=False, default=0, help='cross valid split')
 parser.add_argument('-worker', type=int, default=5, required=False, help="Number of worker for data loader.")

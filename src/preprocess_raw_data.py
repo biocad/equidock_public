@@ -12,10 +12,12 @@ if __name__ == "__main__":
     if args['data'] == 'db5':
         raw_data_path= './data/benchmark5.5/structures'
         split_files_path = './data/benchmark5.5/cv/'
-    else:
-        assert args['data'] == 'dips'
+    elif args['data'] == 'dips':
         raw_data_path= './DIPS/data/DIPS/interim/pairs-pruned/' ## See utils/partition_dips.py on how to get this data preprocessed.
         split_files_path = './DIPS/data/DIPS/interim/pairs-pruned/'
+    else:
+        raw_data_path= f'./data/{args["data"]}/structures'
+        split_files_path = f'./data/{args["data"]}/'
 
 
     os.makedirs(the_path, exist_ok=True)  ## Directory may exist!
@@ -34,9 +36,9 @@ if __name__ == "__main__":
         if args['data'] == 'db5':
             split_files_path = os.path.join(split_files_path, 'cv_' + str(i))
 
-        Unbound_Bound_Data(args, reload_mode='val', load_from_cache=False, raw_data_path=raw_data_path,
-                           split_files_path=split_files_path, data_fraction=args['data_fraction'])
+        # Unbound_Bound_Data(args, reload_mode='val', load_from_cache=False, raw_data_path=raw_data_path,
+        #                    split_files_path=split_files_path, data_fraction=args['data_fraction'])
         Unbound_Bound_Data(args, reload_mode='test', load_from_cache=False, raw_data_path=raw_data_path,
                            split_files_path=split_files_path, data_fraction=args['data_fraction'])
-        Unbound_Bound_Data(args, reload_mode='train', load_from_cache=False, raw_data_path=raw_data_path,
-                           split_files_path=split_files_path, data_fraction=args['data_fraction']) # Writes data into the cache folder.
+        # Unbound_Bound_Data(args, reload_mode='train', load_from_cache=False, raw_data_path=raw_data_path,
+        #                    split_files_path=split_files_path, data_fraction=args['data_fraction']) # Writes data into the cache folder.

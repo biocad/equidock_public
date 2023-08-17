@@ -186,15 +186,20 @@ def protein_to_graph_unbound_bound(unbound_ligand_predic,
                                    max_neighbor=None,
                                    one_hot=False,
                                    residue_loc_is_alphaC=True):
+    try:
+        return protein_to_graph_unbound_bound_residuesonly(unbound_ligand_predic,
+                                                        unbound_receptor_predic,
+                                                        bound_ligand_repres_nodes_loc_clean_array,
+                                                        bound_receptor_repres_nodes_loc_clean_array,
+                                                        cutoff,
+                                                        max_neighbor,
+                                                        one_hot,
+                                                        residue_loc_is_alphaC)
+    except Exception as err:
+        print('Error protein_to_graph_unbound_bound')
+        print(err)
+        return None, None
 
-    return protein_to_graph_unbound_bound_residuesonly(unbound_ligand_predic,
-                                                       unbound_receptor_predic,
-                                                       bound_ligand_repres_nodes_loc_clean_array,
-                                                       bound_receptor_repres_nodes_loc_clean_array,
-                                                       cutoff,
-                                                       max_neighbor,
-                                                       one_hot,
-                                                       residue_loc_is_alphaC)
 
 
 
