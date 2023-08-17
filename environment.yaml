@@ -1,0 +1,20 @@
+# conda create -n equidock python=3.10
+# mamba env update -n equidock --file environment.yaml
+name: equidock
+channels:
+- pytorch
+- nvidia
+- dglteam/label/cu118 
+- conda-forge
+dependencies:
+- python>=3.10
+- pip
+- pytorch=2.0.1
+- pytorch-cuda=11.8
+- cudatoolkit=11.8
+- dgl=1.1.0.cu118
+- dgllife==0.3.2
+- POT==0.9.0
+- joblib==1.2.0
+- biopandas==0.4.1
+- rdkit==2023.3.2
